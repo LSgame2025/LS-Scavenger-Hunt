@@ -6,6 +6,7 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
         .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -14,15 +15,15 @@
 
     <script>
         function getQueryParam(param) {
-            var urlParams = new URLSearchParams(window.location.search);
+            const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
 
-        var hunteeId = getQueryParam('huntee');
-        var hunterId = localStorage.getItem('hunterId');
+        const hunteeId = getQueryParam('huntee');
+        const hunterId = localStorage.getItem('hunterId');
 
         if (hunteeId && hunterId) {
-            var data = new URLSearchParams();
+            const data = new URLSearchParams();
             data.append('hunterId', hunterId);
             data.append('hunteeId', hunteeId);
 
@@ -33,18 +34,19 @@
                 },
                 body: data.toString()
             })
-            .then(function(response) {
-                if (response.ok) {
-                    document.getElementById('status').innerHTML = '<span class="success">Scan logged for Hunter ' + hunterId + ' and Huntee ' + hunteeId + '!</span>';
+            .then(response => response.text())
+            .then(text => {
+                if (text.includes("Success")) {
+                    document.getElementById('status').innerHTML = `<span class="success">Scan logged for Hunter ${hunterId} and Huntee ${hunteeId}!</span>`;
                 } else {
-                    document.getElementById('status').textContent = 'Failed to log scan.';
+                    document.getElementById('status').innerHTML = `<span class="error">Error logging scan: ${text}</span>`;
                 }
             })
-            .catch(function(error) {
-                document.getElementById('status').textContent = 'Error logging scan.';
+            .catch(error => {
+                document.getElementById('status').innerHTML = `<span class="error">Network error: ${error}</span>`;
             });
         } else {
-            document.getElementById('status').textContent = 'Missing Hunter ID or Huntee ID.';
+            document.getElementById('status').innerHTML = `<span class="error">Missing Hunter ID or Huntee ID.</span>`;
         }
     </script>
 </body>
