@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scan Huntee</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        .success { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Scan Successful</h1>
+    <p id="status">Logging your scan...</p>
+
+    <script>
+        function getQueryParam(param) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        var hunteeId = getQueryParam('huntee');
+        var hunterId = localStorage.getItem('hunterId');
+
+        if (hunteeId && hunterId) {
+            var data = new URLSearchParams();
+            data.append('hunterId', hunterId);
+            data.append('hunteeId', hunteeId);
+
+            fetch('https://script.google.com/macros/s/AKfycbwj2uBW9CWcqcwsa4jPtK8EP8BMiJvgxfn-kXHAIraFMRfiPIgKA-SyZ4N2JFm4VEsL/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: data.toString()
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '<span class="success">Scan logged for Hunter ' + hunterId + ' and Huntee ' + hunteeId + '!</span>';
+                } else {
+                    document.getElementById('status').textContent = 'Failed to log scan.';
+                }
+            })
+            .catch(function(error) {
+                document.getElementById('status').textContent = 'Error logging scan.';
+            });
+        } else {
+            document.getElementById('status').textContent = 'Missing Hunter ID or Huntee ID.';
+        }
+    </script>
+</body>
+</html>
