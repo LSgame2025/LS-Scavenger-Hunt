@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hunter Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        input, button { padding: 10px; font-size: 16px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Enter Your Hunter ID</h1>
+    <input type="text" id="hunterIdInput" placeholder="e.g., H001">
+    <br>
+    <button onclick="saveHunterId()">Start Scanning</button>
+
+    <script>
+        function saveHunterId() {
+            var hunterId = document.getElementById('hunterIdInput').value.trim();
+            if (hunterId) {
+                localStorage.setItem('hunterId', hunterId);
+                window.location.href = "scan.html?huntee=P001"; // You can change P001 later
+            } else {
+                alert("Please enter a valid Hunter ID.");
+            }
+        }
+    </script>
+</body>
+</html>
